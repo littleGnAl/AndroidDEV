@@ -64,6 +64,10 @@ public class DisplayCircleView extends View {
 		baseInCirclePaint.setAntiAlias(true);
 		baseInCirclePaint.setColor(Color.WHITE);
 		baseInCirclePaint.setStyle(Style.STROKE);
+		
+		spinArcPaint = new Paint();
+		spinArcPaint.setAntiAlias(true);
+		spinArcPaint.setColor(Color.WHITE);
 	}
 
 }
