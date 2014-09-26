@@ -2,6 +2,7 @@ package com.example.displaycircle;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.view.Menu;
 
 public class MainActivity extends Activity {
@@ -85,10 +86,30 @@ public class MainActivity extends Activity {
 				}
 			}
 			
-			float desPos = dcv.getTextDes();
+			int slideDelta = (int) dcv.getTextSlideDelta();
+			dcv.setBeginToSlide(true);
 			
-			for (int i = 1; i < desPos; i++) {
+			float midTextSize = dcv.getMidTextSize();
+			Log.i("AAA", "midTextSize[get]: " + midTextSize);
+			
+			float topBottomTextSize = dcv.getTopBottomTextSize();
+			float sizedistanceScale = topBottomTextSize / slideDelta;
+			float sizeStep = sizedistanceScale; 
+			
+			Log.i("AAA", "sizedistanceScale: " + sizedistanceScale);
+			
+			
+			Log.i("AAA", "slideDelta: " + slideDelta);
+			
+			for (int i = 1; i < slideDelta; i++) {
+				midTextSize = midTextSize - sizeStep;
+				Log.i("AAA", "midTextSize[minus]: " + midTextSize);
+				
+				dcv.setSlideTextSize(midTextSize);
 				dcv.setTextPosChange(i);
+				
+				
+				
 				
 				try {
 					Thread.sleep(20);

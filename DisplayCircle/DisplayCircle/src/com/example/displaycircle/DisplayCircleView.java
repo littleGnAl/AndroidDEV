@@ -107,6 +107,12 @@ public class DisplayCircleView extends View {
 	
 	private int textPosChange;
 	
+	/*
+	 * The distance between text start position and text end position */
+	private float textSlideDelta;
+	
+	private float slideTextSize;
+	
 	
 	
 
@@ -164,6 +170,7 @@ public class DisplayCircleView extends View {
 		topBottomTextSize = midTextSize / 2;
 		isBeginSlide = false;
 		textPosChange = 1;
+		slideTextSize = 300;
 	}
 	
 	private RectF setRectF(float centerX, float centerY, float radius) {
@@ -257,6 +264,8 @@ public class DisplayCircleView extends View {
 			float textPosX = width / 2 - textLength / 2;
 			float textPosY = height / 2 + textHeight / 4;
 			
+			textSlideDelta = textPosY - textDesPos;
+			
 			drawLines(deltaWidth, width, height, canvas, radius, textDesPos);
 			
 			if (!isBeginSlide) {
@@ -264,7 +273,8 @@ public class DisplayCircleView extends View {
 				
 			}
 			else {
-				canvas.drawText(countsString, textPosX, textPosY, textPaint);
+				textPaint.setTextSize(slideTextSize);
+				canvas.drawText(countsString, textPosX, textPosY - textPosChange, textPaint);
 			}
 		}
 		//canvas.drawArc(oval, -90, 70, false, spinArcPaint);
@@ -308,6 +318,36 @@ public class DisplayCircleView extends View {
 	
 	public void setTextPosChange(int change) {
 		textPosChange = change;
+		postInvalidate();
+	}
+	
+	public float getTextSlideDelta() {
+		return textSlideDelta;
+	}
+	
+	/*
+	 * Set weather the text begin to slide */
+	public void setBeginToSlide(boolean b) {
+		isBeginSlide = b;
+	}
+
+	/*
+	 * Get the text size on the middle position */
+	public float getMidTextSize() {
+		return midTextSize;
+	}
+	
+	/*
+	 * Get the text size on the top or bottom position */
+	public float getTopBottomTextSize() {
+		return topBottomTextSize;
+	}
+	
+	/*
+	 * Set slide text size */
+	public void setSlideTextSize(float size) {
+		slideTextSize = size;
+		//postInvalidate();
 	}
 
 }
