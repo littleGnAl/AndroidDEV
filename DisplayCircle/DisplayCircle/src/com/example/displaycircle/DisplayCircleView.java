@@ -3,6 +3,7 @@ package com.example.displaycircle;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
@@ -35,7 +36,17 @@ public class DisplayCircleView extends View {
 	 * The paint of the spin arc */
 	private Paint spinArcPaint = null;
 	
+	/*
+	 * The scale of the base inner circle width */
+	private float baseInCircleWidthScale = 0.03f;
 	
+	/*
+	 * The scale of the base circle width */
+	private float baseCircleWidthScale = 0.02f;
+	
+	/*
+	 * The scale of the spin arc */
+	private float spinArcWidthScale = 0.01f;
 	
 
 	public DisplayCircleView(Context context, AttributeSet attrs) {
@@ -54,6 +65,12 @@ public class DisplayCircleView extends View {
 		typedArray.recycle();
 	}
 	
+	private void setPaintStrokeWidth(int width, int height) {
+		baseCirclePaint.setStrokeWidth(width * baseCircleWidthScale);
+		baseInCirclePaint.setStrokeWidth(width * baseInCircleWidthScale);
+		spinArcPaint.setStrokeWidth(width * spinArcWidthScale);
+	}
+	
 	private void initVariable() {
 		baseCirclePaint = new Paint();
 		baseCirclePaint.setAntiAlias(true);
@@ -68,6 +85,18 @@ public class DisplayCircleView extends View {
 		spinArcPaint = new Paint();
 		spinArcPaint.setAntiAlias(true);
 		spinArcPaint.setColor(Color.WHITE);
+		spinArcPaint.setStyle(Style.STROKE);
+	}
+	
+	@Override
+	protected void onDraw(Canvas canvas) {
+		int width = getWidth();
+		int height = getHeight();
+		
+		float centerX = width / 2;
+		float centerY = height / 2;
+		
+		
 	}
 
 }
