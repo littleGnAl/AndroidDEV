@@ -14,6 +14,8 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		dcv = (DisplayCircleView) super.findViewById(R.id.displayCircleView);
+		dcv.setUnit("½ï");
+		dcv.setScoreUnit("·Ö");
 		
 		new Thread(new DisplayCircleRunnable()).start();
 	}
@@ -29,6 +31,32 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void run() {
+			
+			dcv.setCounts(118);
+			
+			float counts = dcv.getCounts();
+			
+			for (float i = 1; i <= counts; i++) {
+				
+				dcv.setCounts(i);
+				
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				if (counts - i < 1.0f) {
+					try {
+						Thread.sleep(800);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
+			dcv.setBeginToSpin(true);
+			
 			for (int i = 1; i <= 100; i++) {
 				if (i == 1) {
 					try {
@@ -48,19 +76,53 @@ public class MainActivity extends Activity {
 			}
 			
 			dcv.setSpinToEnd(true);
-			dcv.setCounts(98);
 			
-			float counts = dcv.getCounts();
+			int slideDelta = (int) dcv.getTextSlideDelta();
+			dcv.setBeginToSlide(true);
 			
-			for (float i = 1; i <= counts; i++) {
-				if (counts - i < 5.0f) {
+			float midTextSize = dcv.getMidTextSize();
+			Log.i("AAA", "midTextSize[get]: " + midTextSize);
+			
+			dcv.setSlideTextSize(midTextSize);
+			
+			float topBottomTextSize = dcv.getTopBottomTextSize();
+			float sizedistanceScale = topBottomTextSize / slideDelta;
+			float sizeStep = sizedistanceScale; 
+			
+			//Log.i("AAA", "sizedistanceScale: " + sizedistanceScale);
+			
+			
+			//Log.i("AAA", "slideDelta: " + slideDelta);
+			
+			for (int i = 1; i < slideDelta; i++) {
+				
+				Log.i("AAA", "midTextSize[minus]: " + midTextSize);
+				midTextSize = midTextSize - sizeStep;
+				
+				dcv.setSlideTextSize(midTextSize);
+				dcv.setTextPosChange(i);
+				
+				try {
+					Thread.sleep(2);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			dcv.setSlideToEnd(true);
+			dcv.setScores(98);
+			
+			float scores = dcv.getScores();
+			
+			for (int i = 1; i <= scores; i++) {
+				if (scores - i < 5.0f) {
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 					
-					if (counts - i < 2.0f) {
+					if (scores - i < 2.0f) {
 						try {
 							Thread.sleep(500);
 						} catch (InterruptedException e) {
@@ -68,7 +130,7 @@ public class MainActivity extends Activity {
 						}
 					}
 					
-					if (counts - i < 1.0f) {
+					if (scores - i < 1.0f) {
 						try {
 							Thread.sleep(800);
 						} catch (InterruptedException e) {
@@ -77,42 +139,10 @@ public class MainActivity extends Activity {
 					}
 				}
 				
-				dcv.setCounts(i);
+				dcv.setScores(i);
 				
 				try {
 					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			
-			int slideDelta = (int) dcv.getTextSlideDelta();
-			dcv.setBeginToSlide(true);
-			
-			float midTextSize = dcv.getMidTextSize();
-			Log.i("AAA", "midTextSize[get]: " + midTextSize);
-			
-			float topBottomTextSize = dcv.getTopBottomTextSize();
-			float sizedistanceScale = topBottomTextSize / slideDelta;
-			float sizeStep = sizedistanceScale; 
-			
-			Log.i("AAA", "sizedistanceScale: " + sizedistanceScale);
-			
-			
-			Log.i("AAA", "slideDelta: " + slideDelta);
-			
-			for (int i = 1; i < slideDelta; i++) {
-				midTextSize = midTextSize - sizeStep;
-				Log.i("AAA", "midTextSize[minus]: " + midTextSize);
-				
-				dcv.setSlideTextSize(midTextSize);
-				dcv.setTextPosChange(i);
-				
-				
-				
-				
-				try {
-					Thread.sleep(20);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

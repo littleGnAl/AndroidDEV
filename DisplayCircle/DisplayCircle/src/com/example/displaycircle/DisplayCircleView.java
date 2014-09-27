@@ -46,6 +46,23 @@ public class DisplayCircleView extends View {
 	private Paint textPaint = null;
 	
 	/*
+	 * The unit paint of the unit */
+	private Paint textUnitPaint = null;
+	
+	/*
+	 * The score paint of the score */
+	private Paint textScorePaint = null;
+	
+	private float textScoreUnitDesPos;
+	
+	private Paint textScoreUnitPaint = null;
+	
+	private Paint textUnitSmallPaint = null;
+	
+	
+	
+	
+	/*
 	 * The scale of the base inner circle width */
 	private float baseInCircleWidthScale = 0.04f;
 	
@@ -95,7 +112,7 @@ public class DisplayCircleView extends View {
 	
 	/*
 	 * The scale of the text size on the middle position */
-	private float textSizeScale = 1.7f;
+	private float textSizeScale = 0.9f;
 	
 	/*
 	 * The destination of the slide text */
@@ -112,6 +129,15 @@ public class DisplayCircleView extends View {
 	private float textSlideDelta;
 	
 	private float slideTextSize;
+	
+	/*
+	 * Weather the counts slide to end */
+	private boolean isSlideToEnd;
+	
+	private String scoreUnit;
+	
+	private boolean isBeginSpin;
+	
 	
 	
 	
@@ -165,12 +191,34 @@ public class DisplayCircleView extends View {
 		textPaint.setColor(Color.WHITE);
 		textPaint.setStyle(Style.FILL);
 		
+		textUnitPaint = new Paint();
+		textUnitPaint.setAntiAlias(true);
+		textUnitPaint.setColor(Color.WHITE);
+		textPaint.setStyle(Style.FILL);
+		
+		textScorePaint = new Paint();
+		textScorePaint.setAntiAlias(true);
+		textScorePaint.setColor(Color.WHITE);
+		textScorePaint.setStyle(Style.FILL);
+		
+		textScoreUnitPaint = new Paint();
+		textScoreUnitPaint.setAntiAlias(true);
+		textScoreUnitPaint.setColor(Color.WHITE);
+		textScoreUnitPaint.setStyle(Style.FILL);
+		
+		textUnitSmallPaint = new Paint();
+		textUnitSmallPaint.setAntiAlias(true);
+		textUnitSmallPaint.setColor(Color.WHITE);
+		textUnitSmallPaint.setStyle(Style.FILL);
+		
 		isSpinToEnd = false;
-		midTextSize = 300;
+		midTextSize = 100;
 		topBottomTextSize = midTextSize / 2;
 		isBeginSlide = false;
 		textPosChange = 1;
-		slideTextSize = 300;
+		slideTextSize = 100;
+		isSlideToEnd = false;
+		isBeginSpin = false;
 	}
 	
 	private RectF setRectF(float centerX, float centerY, float radius) {
@@ -188,14 +236,16 @@ public class DisplayCircleView extends View {
 		return oval;
 	}
 	
-	private void setTextSize(float deltaWidth) {
+	private void setCircleTextSize(float deltaWidth) {
 	
 		midTextSize = deltaWidth * textSizeScale;
-		textPaint.setTextSize(midTextSize);
-
 		topBottomTextSize = midTextSize / 2;
-		textPaint.setTextSize(topBottomTextSize);
-		//textPaint.setStrokeWidth(10);
+		textPaint.setTextSize(midTextSize);
+		
+		textUnitPaint.setTextSize(topBottomTextSize);
+		textUnitSmallPaint.setTextSize(topBottomTextSize / 2);
+		textScorePaint.setTextSize(topBottomTextSize);
+		textScoreUnitPaint.setTextSize(topBottomTextSize);
 	}
 	
 	private void drawLines(float deltaWidth, int width, int height, Canvas canvas, float radius, float textDesPos) {
@@ -215,9 +265,20 @@ public class DisplayCircleView extends View {
 		canvas.drawLine(mLeft, mTop + 2 * deltaWidth, mRight, mTop + 2 * deltaWidth, linePaint);
 		canvas.drawLine(mLeft, mTop + 3 * deltaWidth, mRight, mTop + 3 * deltaWidth, linePaint);
 		
-		Log.i("AAA", "textDesPos: " + textDesPos);
-		canvas.drawLine(mLeft, textDesPos, mRight, textDesPos, linePaint);
+		//Log.i("AAA", "textDesPos: " + textDesPos);
 		//canvas.drawLine(mLeft, mBottom, mRight, mBottom, linePaint);
+		canvas.drawLine(mLeft, textDesPos, mRight, textDesPos, linePaint);
+		canvas.drawLine(mLeft, textScoreUnitDesPos, mRight, textScoreUnitDesPos, linePaint);
+		
+	}
+	
+	private float getTextHeight(Paint paint) {
+		FontMetrics fm = paint.getFontMetrics();
+		return (float) Math.ceil(fm.descent - fm.ascent);
+	}
+	
+	private float getTextLength(String s, Paint paint) {
+		return paint.measureText(s, 0, s.length());
 	}
 	
 	@Override
@@ -231,57 +292,91 @@ public class DisplayCircleView extends View {
 		float centerY = height / 2;
 		
 		float radius = centerX - circleWidth;
-		
-		
+		float deltaWidth = (radius - circleWidth) * 2 / 3;
+		this.setCircleTextSize(deltaWidth);
 		
 		canvas.drawCircle(centerX, centerY, radius, baseCirclePaint);
 		canvas.drawCircle(centerX, centerY, radius - circleWidth, baseInCirclePaint);
 		
-		RectF oval = setRectF(centerX, centerY, radius);
+		float textLength = getTextLength(String.valueOf(counts), textPaint);
+		float textHeight = getTextHeight(textPaint);
+		float textPosX = width / 2 - textLength / 2;
+		float textPosY = height / 2 + textHeight / 4;
 		
+		if (isBeginSpin) {
+			RectF oval = setRectF(centerX, centerY, radius);
+			canvas.drawArc(oval, -90, (mProgress / 100) * 360, false, spinArcPaint);			
+		} else {			
+			canvas.drawText(String.valueOf(counts), textPosX, textPosY, textPaint);
+		}
 		
 		
 		if (!isSpinToEnd) {
-			canvas.drawArc(oval, -90, (mProgress / 100) * 360, false, spinArcPaint);			
-		} else {
-			float deltaWidth = (radius - circleWidth) * 2 / 3;
+		} else {						
 			
-			setTextSize(deltaWidth);
+			//String countsString = String.valueOf(counts);
+			//textPaint.measureText(countsString, 0, countsString.length());
 			
-			String countsString = String.valueOf(counts);
-			
-			float textLength = textPaint.measureText(countsString, 0,
-					countsString.length());
-			
-			FontMetrics fm = textPaint.getFontMetrics();
-			float textHeight = (float) Math.ceil(fm.descent - fm.ascent);
+			//FontMetrics fm = textPaint.getFontMetrics();
+			//FontMetrics ffm = textScoreUnitPaint.getFontMetrics();
+			//(float) Math.ceil(fm.descent - fm.ascent);
+			//(float) Math.ceil(ffm.descent - ffm.ascent);
+
+			float textScoreUnitHeight = getTextHeight(textScoreUnitPaint);
 			
 			textDesPos = (height / 2 - radius + circleWidth) + deltaWidth / 2 + textHeight / 4;
+			textScoreUnitDesPos = height / 2 + deltaWidth - circleWidth + textScoreUnitHeight / 4;
+		
+			//Log.i("AAA", "deltaWidth: " + deltaWidth);
+//			Log.i("AAA", "midTextSize[inner]: " + midTextSize);
+//			Log.i("AAA", "topBottomTextSize[inner]: " + topBottomTextSize);
 			
-			Log.i("AAA", "deltaWidth: " + deltaWidth);
-			Log.i("AAA", "midTextSize: " + midTextSize);
-			
-			float textPosX = width / 2 - textLength / 2;
-			float textPosY = height / 2 + textHeight / 4;
 			
 			textSlideDelta = textPosY - textDesPos;
 			
-			drawLines(deltaWidth, width, height, canvas, radius, textDesPos);
+			//drawLines(deltaWidth, width, height, canvas, radius, textDesPos);
 			
 			if (!isBeginSlide) {
-				canvas.drawText(countsString, textPosX, textPosY, textPaint);
-				
+				// The center text
 			}
 			else {
+				// Center text slide to top
 				textPaint.setTextSize(slideTextSize);
-				canvas.drawText(countsString, textPosX, textPosY - textPosChange, textPaint);
+				textLength = getTextLength(String.valueOf(counts), textPaint);
+				textPosX = width / 2 - textLength / 2 - getTextLength(unit, textUnitSmallPaint) / 2;
+				
+				//textPaint.measureText(countsString, 0, countsString.length());
+				
+				canvas.drawText(String.valueOf(counts), textPosX, textPosY - textPosChange, textPaint);				
+			}
+			
+			if (isSlideToEnd) {
+				//textUnitPaint.setTextSize(topBottomTextSize / 2);
+				
+				float textUnitPosX = width / 2 + textLength / 2 - getTextLength(unit, textUnitSmallPaint) / 2;
+				
+//				FontMetrics fmm = textUnitPaint.getFontMetrics();
+//				float textUnitHeight = (float) Math.ceil(fmm.descent - fmm.ascent);
+				
+				// Draw unit 
+				canvas.drawText(unit, textUnitPosX, textPosY - textPosChange, textUnitSmallPaint);
+				
+				float textScoreUnitLength = textScoreUnitPaint.measureText(scoreUnit, 0, scoreUnit.length());
+				
+				canvas.drawText(scoreUnit, width / 2 - textScoreUnitLength / 2, textScoreUnitDesPos, textScoreUnitPaint);
+				
+				textPaint.setTextSize(midTextSize);
+				
+				String scoresString = String.valueOf(scores);
+				
+				textLength = textPaint.measureText(scoresString, 0,
+						scoresString.length());
+				textPosX = width / 2 - textLength / 2;
+				
+				canvas.drawText(scoresString, textPosX, textPosY, textPaint);
 			}
 		}
 		//canvas.drawArc(oval, -90, 70, false, spinArcPaint);
-		
-		
-		
-		
 	}
 	
 	/*
@@ -348,6 +443,35 @@ public class DisplayCircleView extends View {
 	public void setSlideTextSize(float size) {
 		slideTextSize = size;
 		//postInvalidate();
+	}
+	
+	public void setScores(float s) {
+		scores = s;
+		postInvalidate();
+	}
+	
+	/*
+	 * True when counts slide to end */
+	public void setSlideToEnd(boolean b) {
+		isSlideToEnd = b;
+	}
+	
+	/*
+	 * Get scores */
+	public float getScores() {
+		return scores;
+	}
+	
+	public void setUnit(String u) {
+		unit = u;
+	}
+	
+	public void setScoreUnit(String s) {
+		scoreUnit = s;
+	}
+	
+	public void setBeginToSpin(boolean b) {
+		isBeginSpin = b;
 	}
 
 }
