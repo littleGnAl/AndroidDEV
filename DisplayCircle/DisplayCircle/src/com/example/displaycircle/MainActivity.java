@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.ListView;
 
 public class MainActivity extends Activity {
 	private DisplayCircleView dcv = null;
+	private ListView listView = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +20,8 @@ public class MainActivity extends Activity {
 		dcv.setScoreUnit("∑÷");
 		dcv.setTopText("œ÷‘⁄");
 		
+		listView = (ListView) super.findViewById(R.id.listView1);
+		
 		new Thread(new DisplayCircleRunnable()).start();
 	}
 
@@ -26,6 +30,12 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+	
+	private void initListView() {
+		String[] data = { "ONE", "TWO", "THREE", "FOUR", "FIVE" };
+		
+		//listView.setAdapter(new ArrayAdapter)
 	}
 	
 	private class DisplayCircleRunnable implements Runnable {

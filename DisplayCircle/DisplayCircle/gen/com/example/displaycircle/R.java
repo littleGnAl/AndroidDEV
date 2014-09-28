@@ -35,6 +35,7 @@ containing a value of this type.
         public static final int unit=0x7f010000;
     }
     public static final class color {
+        public static final int listViewBg=0x7f040001;
         public static final int main_bg_color=0x7f040000;
     }
     public static final class dimen {
@@ -51,8 +52,13 @@ containing a value of this type.
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f090001;
-        public static final int displayCircleView=0x7f090000;
+        public static final int action_settings=0x7f090006;
+        public static final int btn1=0x7f090001;
+        public static final int btn2=0x7f090003;
+        public static final int displayCircleView=0x7f090002;
+        public static final int linearLayout2=0x7f090000;
+        public static final int linearLayout3=0x7f090004;
+        public static final int listView1=0x7f090005;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -92,6 +98,7 @@ containing a value of this type.
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f070001;
+        public static final int buttonStyle=0x7f070002;
     }
     public static final class styleable {
         /** Attributes that can be used with a displayCircleView.
