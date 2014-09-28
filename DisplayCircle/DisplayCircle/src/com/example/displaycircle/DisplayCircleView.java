@@ -95,6 +95,10 @@ public class DisplayCircleView extends View {
 	private float spinArcWidth;
 	
 	/*
+	 * The circle radius when the spin arc spin to the end */
+	private float spinCircleRadius;
+	
+	/*
 	 * The progress of the spin arc */
 	private float mProgress = 0;
 	
@@ -137,6 +141,8 @@ public class DisplayCircleView extends View {
 	private String scoreUnit;
 	
 	private boolean isBeginSpin;
+	
+	private String topText;
 	
 	
 	
@@ -292,6 +298,7 @@ public class DisplayCircleView extends View {
 		float centerY = height / 2;
 		
 		float radius = centerX - circleWidth;
+		spinCircleRadius = (radius * 2 + circleWidth - spinArcWidth) / 2;
 		float deltaWidth = (radius - circleWidth) * 2 / 3;
 		this.setCircleTextSize(deltaWidth);
 		
@@ -302,80 +309,70 @@ public class DisplayCircleView extends View {
 		float textHeight = getTextHeight(textPaint);
 		float textPosX = width / 2 - textLength / 2;
 		float textPosY = height / 2 + textHeight / 4;
+		float textScoreUnitHeight = getTextHeight(textScoreUnitPaint);
 		
-		if (isBeginSpin) {
-			RectF oval = setRectF(centerX, centerY, radius);
-			canvas.drawArc(oval, -90, (mProgress / 100) * 360, false, spinArcPaint);			
-		} else {			
-			canvas.drawText(String.valueOf(counts), textPosX, textPosY, textPaint);
-		}
+		textDesPos = (height / 2 - radius + circleWidth) + deltaWidth / 2 + textHeight / 4;
+		textScoreUnitDesPos = height / 2 + deltaWidth - circleWidth + textScoreUnitHeight / 4;
+	
+		//Log.i("AAA", "deltaWidth: " + deltaWidth);
+//		Log.i("AAA", "midTextSize[inner]: " + midTextSize);
+//		Log.i("AAA", "topBottomTextSize[inner]: " + topBottomTextSize);
 		
+		textSlideDelta = textPosY - textDesPos;
 		
 		if (!isSpinToEnd) {
-		} else {						
+			canvas.drawText(String.valueOf(counts), textPosX, textPosY, textPaint);
+			canvas.drawText(topText, width / 2 - getTextLength(topText, textUnitPaint) / 2, textDesPos, textUnitPaint);
+			canvas.drawText(unit, width / 2 - getTextLength(unit, textUnitPaint) / 2, textScoreUnitDesPos, textUnitPaint);
 			
-			//String countsString = String.valueOf(counts);
+		}
+		
+		if (isBeginSpin && isSpinToEnd == false) {
+			RectF oval = setRectF(centerX, centerY, radius);
+			canvas.drawArc(oval, -90, (mProgress / 100) * 360, false, spinArcPaint);			
+		}
+		
+		// Begin to slide center text
+		if (isSpinToEnd) {
+			// Center text slide to top
+			textPaint.setTextSize(slideTextSize);
+			textLength = getTextLength(String.valueOf(counts), textPaint);
+			textPosX = width / 2 - textLength / 2 - getTextLength(unit, textUnitSmallPaint) / 2;
+			
 			//textPaint.measureText(countsString, 0, countsString.length());
 			
-			//FontMetrics fm = textPaint.getFontMetrics();
-			//FontMetrics ffm = textScoreUnitPaint.getFontMetrics();
-			//(float) Math.ceil(fm.descent - fm.ascent);
-			//(float) Math.ceil(ffm.descent - ffm.ascent);
-
-			float textScoreUnitHeight = getTextHeight(textScoreUnitPaint);
-			
-			textDesPos = (height / 2 - radius + circleWidth) + deltaWidth / 2 + textHeight / 4;
-			textScoreUnitDesPos = height / 2 + deltaWidth - circleWidth + textScoreUnitHeight / 4;
-		
-			//Log.i("AAA", "deltaWidth: " + deltaWidth);
-//			Log.i("AAA", "midTextSize[inner]: " + midTextSize);
-//			Log.i("AAA", "topBottomTextSize[inner]: " + topBottomTextSize);
+				canvas.drawCircle(centerX, centerY, spinCircleRadius, spinArcPaint);				
 			
 			
-			textSlideDelta = textPosY - textDesPos;
-			
-			//drawLines(deltaWidth, width, height, canvas, radius, textDesPos);
-			
-			if (!isBeginSlide) {
-				// The center text
-			}
-			else {
-				// Center text slide to top
-				textPaint.setTextSize(slideTextSize);
-				textLength = getTextLength(String.valueOf(counts), textPaint);
-				textPosX = width / 2 - textLength / 2 - getTextLength(unit, textUnitSmallPaint) / 2;
-				
-				//textPaint.measureText(countsString, 0, countsString.length());
-				
-				canvas.drawText(String.valueOf(counts), textPosX, textPosY - textPosChange, textPaint);				
-			}
-			
-			if (isSlideToEnd) {
-				//textUnitPaint.setTextSize(topBottomTextSize / 2);
-				
-				float textUnitPosX = width / 2 + textLength / 2 - getTextLength(unit, textUnitSmallPaint) / 2;
-				
-//				FontMetrics fmm = textUnitPaint.getFontMetrics();
-//				float textUnitHeight = (float) Math.ceil(fmm.descent - fmm.ascent);
-				
-				// Draw unit 
-				canvas.drawText(unit, textUnitPosX, textPosY - textPosChange, textUnitSmallPaint);
-				
-				float textScoreUnitLength = textScoreUnitPaint.measureText(scoreUnit, 0, scoreUnit.length());
-				
-				canvas.drawText(scoreUnit, width / 2 - textScoreUnitLength / 2, textScoreUnitDesPos, textScoreUnitPaint);
-				
-				textPaint.setTextSize(midTextSize);
-				
-				String scoresString = String.valueOf(scores);
-				
-				textLength = textPaint.measureText(scoresString, 0,
-						scoresString.length());
-				textPosX = width / 2 - textLength / 2;
-				
-				canvas.drawText(scoresString, textPosX, textPosY, textPaint);
-			}
+			canvas.drawText(String.valueOf(counts), textPosX, textPosY - textPosChange, textPaint);	
 		}
+		
+		if (isSlideToEnd) {
+
+			float textUnitPosX = width / 2 + textLength / 2 - getTextLength(unit, textUnitSmallPaint) / 2;
+			
+//			FontMetrics fmm = textUnitPaint.getFontMetrics();
+//			float textUnitHeight = (float) Math.ceil(fmm.descent - fmm.ascent);
+			
+			// Draw unit 
+			canvas.drawText(unit, textUnitPosX, textPosY - textPosChange, textUnitSmallPaint);
+			
+			float textScoreUnitLength = textScoreUnitPaint.measureText(scoreUnit, 0, scoreUnit.length());
+			
+			canvas.drawText(scoreUnit, width / 2 - textScoreUnitLength / 2, textScoreUnitDesPos, textScoreUnitPaint);
+			
+			textPaint.setTextSize(midTextSize);
+			
+			String scoresString = String.valueOf(scores);
+			
+			textLength = textPaint.measureText(scoresString, 0,
+					scoresString.length());
+			textPosX = width / 2 - textLength / 2;
+			
+			canvas.drawText(scoresString, textPosX, textPosY, textPaint);
+		}
+		
+		
 		//canvas.drawArc(oval, -90, 70, false, spinArcPaint);
 	}
 	
@@ -472,6 +469,23 @@ public class DisplayCircleView extends View {
 	
 	public void setBeginToSpin(boolean b) {
 		isBeginSpin = b;
+	}
+	
+	public void setTopText(String s) {
+		topText = s;
+	}
+	
+	public float getDeltaSpinArcWidth() {
+		return circleWidth;// - spinArcWidth;
+	}
+	
+	public float getSpinCircleRadius() {
+		return spinCircleRadius;
+	}
+	
+	public void setSpinCircleRadius(float f) {
+		spinCircleRadius = f;
+		postInvalidate();
 	}
 
 }

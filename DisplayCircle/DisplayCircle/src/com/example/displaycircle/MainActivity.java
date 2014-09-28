@@ -16,6 +16,7 @@ public class MainActivity extends Activity {
 		dcv = (DisplayCircleView) super.findViewById(R.id.displayCircleView);
 		dcv.setUnit("ΩÔ");
 		dcv.setScoreUnit("∑÷");
+		dcv.setTopText("œ÷‘⁄");
 		
 		new Thread(new DisplayCircleRunnable()).start();
 	}
@@ -32,6 +33,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void run() {
 			
+			// Counting the counts
 			dcv.setCounts(118);
 			
 			float counts = dcv.getCounts();
@@ -55,8 +57,9 @@ public class MainActivity extends Activity {
 				}
 			}
 			
+			// Begin to spin
 			dcv.setBeginToSpin(true);
-			
+
 			for (int i = 1; i <= 100; i++) {
 				if (i == 1) {
 					try {
@@ -65,9 +68,9 @@ public class MainActivity extends Activity {
 						e.printStackTrace();
 					}
 				}
-				
+
 				dcv.setProgress(i);
-				
+
 				try {
 					Thread.sleep(10);
 				} catch (InterruptedException e) {
@@ -75,6 +78,7 @@ public class MainActivity extends Activity {
 				}
 			}
 			
+			// Spin to end and begin to slide center text
 			dcv.setSpinToEnd(true);
 			
 			int slideDelta = (int) dcv.getTextSlideDelta();
@@ -89,26 +93,34 @@ public class MainActivity extends Activity {
 			float sizedistanceScale = topBottomTextSize / slideDelta;
 			float sizeStep = sizedistanceScale; 
 			
+			float deltaSpinArcWidth = dcv.getDeltaSpinArcWidth();
+			float spinCircleRadius = dcv.getSpinCircleRadius(); 
+			
 			//Log.i("AAA", "sizedistanceScale: " + sizedistanceScale);
-			
-			
 			//Log.i("AAA", "slideDelta: " + slideDelta);
 			
 			for (int i = 1; i < slideDelta; i++) {
 				
-				Log.i("AAA", "midTextSize[minus]: " + midTextSize);
+				//Log.i("AAA", "midTextSize[minus]: " + midTextSize);
 				midTextSize = midTextSize - sizeStep;
+				if (i % (int) (slideDelta / deltaSpinArcWidth) == 0) {
+					spinCircleRadius = spinCircleRadius - deltaSpinArcWidth / slideDelta;
+				}
+				Log.i("AAA", "spinCircleRadius: " + spinCircleRadius);
+				Log.i("AAA", "deltaSpinArcWidth: " + deltaSpinArcWidth);
 				
 				dcv.setSlideTextSize(midTextSize);
+				dcv.setSpinCircleRadius(spinCircleRadius);
 				dcv.setTextPosChange(i);
 				
 				try {
-					Thread.sleep(2);
+					Thread.sleep(5);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
 			
+			// Center text slide to end
 			dcv.setSlideToEnd(true);
 			dcv.setScores(98);
 			
@@ -148,6 +160,8 @@ public class MainActivity extends Activity {
 				}
 			}
 			
+			//Thread.State;
+						
 		}
 		
 	}
