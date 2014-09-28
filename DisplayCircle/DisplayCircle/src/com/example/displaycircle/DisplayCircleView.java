@@ -27,7 +27,7 @@ public class DisplayCircleView extends View {
 	
 	/*
 	 * The scores of the weight */
-	private float scores;
+	private int scores;
 	
 	/*
 	 * The paint of the base circle */
@@ -161,7 +161,7 @@ public class DisplayCircleView extends View {
 		
 		unit = typedArray.getString(R.styleable.displayCircleView_unit);
 		counts = typedArray.getFloat(R.styleable.displayCircleView_counts, 119);
-		scores = typedArray.getFloat(R.styleable.displayCircleView_scores, 90);
+		scores = typedArray.getInt(R.styleable.displayCircleView_scores, 90);
 		
 		typedArray.recycle();
 	}
@@ -341,7 +341,7 @@ public class DisplayCircleView extends View {
 			
 			//textPaint.measureText(countsString, 0, countsString.length());
 			
-				canvas.drawCircle(centerX, centerY, spinCircleRadius, spinArcPaint);				
+				//canvas.drawCircle(centerX, centerY, spinCircleRadius, spinArcPaint);				
 			
 			
 			canvas.drawText(String.valueOf(counts), textPosX, textPosY - textPosChange, textPaint);	
@@ -442,7 +442,7 @@ public class DisplayCircleView extends View {
 		//postInvalidate();
 	}
 	
-	public void setScores(float s) {
+	public void setScores(int s) {
 		scores = s;
 		postInvalidate();
 	}
@@ -455,7 +455,7 @@ public class DisplayCircleView extends View {
 	
 	/*
 	 * Get scores */
-	public float getScores() {
+	public int getScores() {
 		return scores;
 	}
 	
@@ -485,7 +485,7 @@ public class DisplayCircleView extends View {
 	
 	public void setSpinCircleRadius(float f) {
 		spinCircleRadius = f;
-		//postInvalidate();
+		postInvalidate();
 	}
 
 }

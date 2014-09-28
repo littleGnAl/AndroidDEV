@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
 			
 			float counts = dcv.getCounts();
 			
-			for (float i = 1; i <= counts; i++) {
+			for (int i = 1; i <= counts; i++) {
 				
 				dcv.setCounts(i);
 				
@@ -93,8 +93,8 @@ public class MainActivity extends Activity {
 			float sizedistanceScale = topBottomTextSize / slideDelta;
 			float sizeStep = sizedistanceScale; 
 			
-			float deltaSpinArcWidth = dcv.getDeltaSpinArcWidth();
-			float spinCircleRadius = dcv.getSpinCircleRadius(); 
+//			float deltaSpinArcWidth = dcv.getDeltaSpinArcWidth();
+//			float spinCircleRadius = dcv.getSpinCircleRadius(); 
 			
 			//Log.i("AAA", "sizedistanceScale: " + sizedistanceScale);
 			//Log.i("AAA", "slideDelta: " + slideDelta);
@@ -104,19 +104,19 @@ public class MainActivity extends Activity {
 				//Log.i("AAA", "midTextSize[minus]: " + midTextSize);
 				midTextSize = midTextSize - sizeStep;
 				
-				Log.i("AAA", "result: " + i % (int) (slideDelta / deltaSpinArcWidth));
-				if ((i % (int) (slideDelta / deltaSpinArcWidth)) == 0) {
-					spinCircleRadius--; //= spinCircleRadius - deltaSpinArcWidth / slideDelta;
-				}
-				Log.i("AAA", "spinCircleRadius: " + spinCircleRadius);
-				Log.i("AAA", "deltaSpinArcWidth: " + deltaSpinArcWidth);
+				//Log.i("AAA", "result: " + i % (int) (slideDelta / deltaSpinArcWidth));
+				//if ((i % (int) (slideDelta / deltaSpinArcWidth)) == 0) {
+				
+				//spinCircleRadius = spinCircleRadius - deltaSpinArcWidth / slideDelta;			
+//				Log.i("AAA", "spinCircleRadius: " + spinCircleRadius);
+//				Log.i("AAA", "deltaSpinArcWidth: " + deltaSpinArcWidth);
 				
 				dcv.setSlideTextSize(midTextSize);
-				dcv.setSpinCircleRadius(spinCircleRadius);
+				//dcv.setSpinCircleRadius(spinCircleRadius);
 				dcv.setTextPosChange(i);
 				
 				try {
-					Thread.sleep(5);
+					Thread.sleep(4);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
