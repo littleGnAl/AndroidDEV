@@ -485,7 +485,7 @@ public class DisplayCircleView extends View {
 	
 	public void setSpinCircleRadius(float f) {
 		spinCircleRadius = f;
-		postInvalidate();
+		//postInvalidate();
 	}
 
 }

@@ -103,8 +103,10 @@ public class MainActivity extends Activity {
 				
 				//Log.i("AAA", "midTextSize[minus]: " + midTextSize);
 				midTextSize = midTextSize - sizeStep;
-				if (i % (int) (slideDelta / deltaSpinArcWidth) == 0) {
-					spinCircleRadius = spinCircleRadius - deltaSpinArcWidth / slideDelta;
+				
+				Log.i("AAA", "result: " + i % (int) (slideDelta / deltaSpinArcWidth));
+				if ((i % (int) (slideDelta / deltaSpinArcWidth)) == 0) {
+					spinCircleRadius--; //= spinCircleRadius - deltaSpinArcWidth / slideDelta;
 				}
 				Log.i("AAA", "spinCircleRadius: " + spinCircleRadius);
 				Log.i("AAA", "deltaSpinArcWidth: " + deltaSpinArcWidth);
