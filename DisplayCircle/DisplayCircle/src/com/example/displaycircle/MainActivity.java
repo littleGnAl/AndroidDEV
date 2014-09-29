@@ -1,14 +1,35 @@
 package com.example.displaycircle;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 public class MainActivity extends Activity {
 	private DisplayCircleView dcv = null;
+	
 	private ListView listView = null;
+	private List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+	private SimpleAdapter simpleAdapter = null;
+	
+	private Button button1 = null;
+	private Button button2 = null;
+	
+	private String[][] data = new String[][] { { "ONE", "It's ONE"}, 
+											   { "TWO", "It's TWO" },
+											   { "THREE", "It's THREE" },
+											   { "FOUR", "It's FOUR" },
+											   { "FIVE", "It's FIVE" } };
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +42,28 @@ public class MainActivity extends Activity {
 		dcv.setTopText("œ÷‘⁄");
 		
 		listView = (ListView) super.findViewById(R.id.listView1);
+		initListView();
 		
-		new Thread(new DisplayCircleRunnable()).start();
+		button1 = (Button) super.findViewById(R.id.btn1);
+		button1.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				new Thread(new DisplayCircleRunnable()).start();
+			}
+		});
+		
+		button2 = (Button) super.findViewById(R.id.btn2);
+		button2.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				resetDisplayCircle();
+				
+			}
+		});
+		
+		//new Thread(new DisplayCircleRunnable()).start();
 	}
 
 	@Override
@@ -33,9 +74,33 @@ public class MainActivity extends Activity {
 	}
 	
 	private void initListView() {
-		String[] data = { "ONE", "TWO", "THREE", "FOUR", "FIVE" };
 		
-		//listView.setAdapter(new ArrayAdapter)
+		
+		//listView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, data));
+		//listView.setAdapter(this, );
+		
+		for (int i = 0; i < data.length; i++) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("_id", data[i][0]);
+			map.put("name", data[i][1]);
+			list.add(map);
+		}
+		
+		simpleAdapter = new SimpleAdapter(this, 
+										  list,
+										  R.layout.data_list, 
+										  new String[] { "_id", "name" }, 
+										  new int[] { R.id._id, R.id.name });
+		
+		listView.setAdapter(simpleAdapter);
+	}
+	
+	private void resetDisplayCircle() {
+		dcv.setCounts(0);
+		dcv.setBeginToSpin(false);
+		dcv.setSpinToEnd(false);
+		dcv.setBeginToSlide(false);
+		dcv.setSlideToEnd(false);
 	}
 	
 	private class DisplayCircleRunnable implements Runnable {
@@ -110,7 +175,13 @@ public class MainActivity extends Activity {
 			//Log.i("AAA", "slideDelta: " + slideDelta);
 			
 			for (int i = 1; i < slideDelta; i++) {
-				
+				if (slideDelta - i < 1) {
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
 				//Log.i("AAA", "midTextSize[minus]: " + midTextSize);
 				midTextSize = midTextSize - sizeStep;
 				
@@ -170,6 +241,10 @@ public class MainActivity extends Activity {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+			}
+			
+			if (Thread.currentThread().isInterrupted()) {
+				Thread.interrupted();
 			}
 			
 			//Thread.State;

@@ -52,16 +52,20 @@ containing a value of this type.
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f090006;
+        public static final int _id=0x7f090006;
+        public static final int action_settings=0x7f090008;
         public static final int btn1=0x7f090001;
         public static final int btn2=0x7f090003;
         public static final int displayCircleView=0x7f090002;
         public static final int linearLayout2=0x7f090000;
         public static final int linearLayout3=0x7f090004;
         public static final int listView1=0x7f090005;
+        public static final int name=0x7f090007;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
+        public static final int circle_button_style=0x7f030001;
+        public static final int data_list=0x7f030002;
     }
     public static final class menu {
         public static final int main=0x7f080000;
@@ -99,6 +103,7 @@ containing a value of this type.
          */
         public static final int AppTheme=0x7f070001;
         public static final int buttonStyle=0x7f070002;
+        public static final int textViewStyle=0x7f070003;
     }
     public static final class styleable {
         /** Attributes that can be used with a displayCircleView.

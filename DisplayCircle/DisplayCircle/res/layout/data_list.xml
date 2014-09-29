@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+    
+    <TableRow>
+        <TextView
+            android:id="@+id/_id"
+            style="@style/textViewStyle" />
+
+        <TextView
+            android:id="@+id/name"
+            style="@style/textViewStyle"
+            android:layout_marginLeft="30dp" />
+	</TableRow>"
+    
+</TableLayout>

@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 
 public class DisplayCircleView extends View {
+	// https://github.com/markushi/android-circlebutton
 	
 	/*
 	 * Unit of the weight */
@@ -160,7 +161,7 @@ public class DisplayCircleView extends View {
 		TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.displayCircleView, 0, 0);
 		
 		unit = typedArray.getString(R.styleable.displayCircleView_unit);
-		counts = typedArray.getFloat(R.styleable.displayCircleView_counts, 119);
+		counts = typedArray.getFloat(R.styleable.displayCircleView_counts, 0);
 		scores = typedArray.getInt(R.styleable.displayCircleView_scores, 90);
 		
 		typedArray.recycle();
@@ -291,6 +292,9 @@ public class DisplayCircleView extends View {
 	protected void onDraw(Canvas canvas) {
 		int width = getWidth();
 		int height = getHeight();
+		
+		//width = height = height > width ? width : height;
+		//width = height = height > width ? height : width;
 		
 		setPaintStrokeWidth(width);
 		
