@@ -26,6 +26,7 @@
         <item name="android:textSize">40sp</item>
         <item name="android:background">@layout/circle_button_style</item>
         <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_weight">1</item>
     </style>
     
     <style name="textViewStyle">

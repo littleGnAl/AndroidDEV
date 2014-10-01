@@ -226,6 +226,9 @@ public class DisplayCircleView extends View {
 		slideTextSize = 100;
 		isSlideToEnd = false;
 		isBeginSpin = false;
+		
+		unit = "½ï";
+		
 	}
 	
 	private RectF setRectF(float centerX, float centerY, float radius) {
@@ -290,11 +293,13 @@ public class DisplayCircleView extends View {
 	
 	@Override
 	protected void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
+		
 		int width = getWidth();
 		int height = getHeight();
 		
 		//width = height = height > width ? width : height;
-		//width = height = height > width ? height : width;
+		width = height = (height > width) ? width : height;
 		
 		setPaintStrokeWidth(width);
 		
@@ -395,7 +400,7 @@ public class DisplayCircleView extends View {
 	
 	/*
 	 * Set counts in the circle */
-	public void setCounts(float counts) {
+	public void setWeight(float counts) {
 		this.counts = counts;
 		postInvalidate();
 	}

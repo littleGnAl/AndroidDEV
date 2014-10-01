@@ -37,9 +37,10 @@
 
          <com.example.displaycircle.DisplayCircleView
 	                android:id="@+id/displayCircleView"
-	                android:layout_width="200dp"
-	                android:layout_height="200dp"
-	                android:layout_gravity="center"/>
+	             	android:layout_width="100dp"
+	             	android:layout_height="100dp"
+	                android:layout_gravity="center_horizontal"
+	                android:layout_weight="2"/>
 
          <Button
              android:id="@+id/btn2"

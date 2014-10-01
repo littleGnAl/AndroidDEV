@@ -1,0 +1,15 @@
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="#12C6C4"
+    tools:context="com.yunmai.scale.customview.MainActivity" >
+
+	<com.yunmai.scale.customview.StaticCircleView
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/staticCircleView" />
+
+</LinearLayout>

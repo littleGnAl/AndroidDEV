@@ -31,6 +31,11 @@ public class MainActivity extends Activity {
 											   { "FOUR", "It's FOUR" },
 											   { "FIVE", "It's FIVE" } };
 	
+	//Thread displayCircleThread = new Thread(new DisplayCircleRunnable(0, 0, false));
+	private boolean enableAnimate = false;
+	private float counts = 0.0f;
+	private int scores = 0;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -40,6 +45,7 @@ public class MainActivity extends Activity {
 		dcv.setUnit("ΩÔ");
 		dcv.setScoreUnit("∑÷");
 		dcv.setTopText("œ÷‘⁄");
+		//dcv.setCounts(221);
 		
 		listView = (ListView) super.findViewById(R.id.listView1);
 		initListView();
@@ -49,7 +55,29 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				new Thread(new DisplayCircleRunnable()).start();
+				//dcv.setCounts(117.9f);
+//				for (int i = 0; i < 10; i++) {
+//					
+//					counts = i * 2.5f;
+//					scores = 94;
+//					enableAnimate = false;
+//					new Thread(new DisplayCircleRunnable()).start();
+//					
+//					try {
+//						Thread.sleep(50);
+//					} catch (InterruptedException e) {
+//						// TODO: handle exception
+//						e.printStackTrace();
+//					}
+//					
+//				}
+				
+				new Thread(new ChildDisplayCircleRunnable()).start();
+				
+					
+				
+				//dcv.setCounts(119f);
+				//displayCircleThread.setCounts(118);
 			}
 		});
 		
@@ -96,158 +124,162 @@ public class MainActivity extends Activity {
 	}
 	
 	private void resetDisplayCircle() {
-		dcv.setCounts(0);
+		dcv.setWeight(0);
 		dcv.setBeginToSpin(false);
 		dcv.setSpinToEnd(false);
 		dcv.setBeginToSlide(false);
 		dcv.setSlideToEnd(false);
 	}
 	
+	private class ChildDisplayCircleRunnable implements Runnable {
+		
+		@Override
+		public void run() {
+			for (int i = 0; i < 10; i++) {
+				
+				counts = i * 2.5f;
+				scores = 94;
+				enableAnimate = false;
+				new Thread(new DisplayCircleRunnable()).start();
+				
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
+				
+			}
+		}
+	}
+	
 	private class DisplayCircleRunnable implements Runnable {
-
+		
 		@Override
 		public void run() {
 			
 			// Counting the counts
-			dcv.setCounts(118);
+			dcv.setWeight(counts);
 			
-			float counts = dcv.getCounts();
-			
-			for (int i = 1; i <= counts; i++) {
+			if (enableAnimate) {
 				
-				dcv.setCounts(i);
+				// Begin to spin
+				dcv.setBeginToSpin(enableAnimate);
 				
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				
-				if (counts - i < 1.0f) {
-					try {
-						Thread.sleep(800);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-			
-			// Begin to spin
-			dcv.setBeginToSpin(true);
-
-			for (int i = 1; i <= 100; i++) {
-				if (i == 1) {
-					try {
-						Thread.sleep(50);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-
-				dcv.setProgress(i);
-
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			
-			// Spin to end and begin to slide center text
-			dcv.setSpinToEnd(true);
-			
-			int slideDelta = (int) dcv.getTextSlideDelta();
-			dcv.setBeginToSlide(true);
-			
-			float midTextSize = dcv.getMidTextSize();
-			Log.i("AAA", "midTextSize[get]: " + midTextSize);
-			
-			dcv.setSlideTextSize(midTextSize);
-			
-			float topBottomTextSize = dcv.getTopBottomTextSize();
-			float sizedistanceScale = topBottomTextSize / slideDelta;
-			float sizeStep = sizedistanceScale; 
-			
-//			float deltaSpinArcWidth = dcv.getDeltaSpinArcWidth();
-//			float spinCircleRadius = dcv.getSpinCircleRadius(); 
-			
-			//Log.i("AAA", "sizedistanceScale: " + sizedistanceScale);
-			//Log.i("AAA", "slideDelta: " + slideDelta);
-			
-			for (int i = 1; i < slideDelta; i++) {
-				if (slideDelta - i < 1) {
-					try {
-						Thread.sleep(500);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-				//Log.i("AAA", "midTextSize[minus]: " + midTextSize);
-				midTextSize = midTextSize - sizeStep;
-				
-				//Log.i("AAA", "result: " + i % (int) (slideDelta / deltaSpinArcWidth));
-				//if ((i % (int) (slideDelta / deltaSpinArcWidth)) == 0) {
-				
-				//spinCircleRadius = spinCircleRadius - deltaSpinArcWidth / slideDelta;			
-//				Log.i("AAA", "spinCircleRadius: " + spinCircleRadius);
-//				Log.i("AAA", "deltaSpinArcWidth: " + deltaSpinArcWidth);
-				
-				dcv.setSlideTextSize(midTextSize);
-				//dcv.setSpinCircleRadius(spinCircleRadius);
-				dcv.setTextPosChange(i);
-				
-				try {
-					Thread.sleep(4);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			
-			// Center text slide to end
-			dcv.setSlideToEnd(true);
-			dcv.setScores(98);
-			
-			float scores = dcv.getScores();
-			
-			for (int i = 1; i <= scores; i++) {
-				if (scores - i < 5.0f) {
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+				for (int i = 1; i <= 100; i++) {
+					if (i == 1) {
+						try {
+							Thread.sleep(50);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
 					
-					if (scores - i < 2.0f) {
+					dcv.setProgress(i);
+					
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				// Spin to end and begin to slide center text
+				dcv.setSpinToEnd(enableAnimate);
+				
+				int slideDelta = (int) dcv.getTextSlideDelta();
+				dcv.setBeginToSlide(enableAnimate);
+				
+				float midTextSize = dcv.getMidTextSize();
+				Log.i("AAA", "midTextSize[get]: " + midTextSize);
+				
+				dcv.setSlideTextSize(midTextSize);
+				
+				float topBottomTextSize = dcv.getTopBottomTextSize();
+				float sizedistanceScale = topBottomTextSize / slideDelta;
+				float sizeStep = sizedistanceScale; 
+				
+//			float deltaSpinArcWidth = dcv.getDeltaSpinArcWidth();
+//			float spinCircleRadius = dcv.getSpinCircleRadius(); 
+				
+				//Log.i("AAA", "sizedistanceScale: " + sizedistanceScale);
+				//Log.i("AAA", "slideDelta: " + slideDelta);
+				
+				for (int i = 1; i < slideDelta; i++) {
+					if (slideDelta - i < 1) {
 						try {
 							Thread.sleep(500);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
 					}
+					//Log.i("AAA", "midTextSize[minus]: " + midTextSize);
+					midTextSize = midTextSize - sizeStep;
 					
-					if (scores - i < 1.0f) {
-						try {
-							Thread.sleep(800);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+					//Log.i("AAA", "result: " + i % (int) (slideDelta / deltaSpinArcWidth));
+					//if ((i % (int) (slideDelta / deltaSpinArcWidth)) == 0) {
+					
+					//spinCircleRadius = spinCircleRadius - deltaSpinArcWidth / slideDelta;			
+//				Log.i("AAA", "spinCircleRadius: " + spinCircleRadius);
+//				Log.i("AAA", "deltaSpinArcWidth: " + deltaSpinArcWidth);
+					
+					dcv.setSlideTextSize(midTextSize);
+					//dcv.setSpinCircleRadius(spinCircleRadius);
+					dcv.setTextPosChange(i);
+					
+					try {
+						Thread.sleep(4);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
 				}
 				
-				dcv.setScores(i);
+				// Center text slide to end
+				dcv.setSlideToEnd(enableAnimate);
+				dcv.setScores(scores);
 				
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				float scores = dcv.getScores();
+				
+				for (int i = 1; i <= scores; i++) {
+					if (scores - i < 5.0f) {
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						
+						if (scores - i < 2.0f) {
+							try {
+								Thread.sleep(500);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+						
+						if (scores - i < 1.0f) {
+							try {
+								Thread.sleep(800);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+					
+					dcv.setScores(i);
+					
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
+				
+//			if (Thread.currentThread().isInterrupted()) {
+//				Thread.interrupted();
+//			}
+				
+				//Thread.State;
 			}
-			
-			if (Thread.currentThread().isInterrupted()) {
-				Thread.interrupted();
-			}
-			
-			//Thread.State;
 						
 		}
 		
