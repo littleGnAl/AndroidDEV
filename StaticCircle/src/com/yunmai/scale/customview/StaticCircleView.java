@@ -23,14 +23,16 @@ public class StaticCircleView extends View{
 	private void initVariable() {
 		exCirclePaint = setPaint(150, Color.WHITE, Style.STROKE);
 		inCirclePaint = setPaint(255, Color.WHITE, Style.STROKE);
-		
-		
-		
+		textPaint = setPaint(255, Color.WHITE, Style.FILL);
 		
 		exCircleWidth = 0;
 		
 		textAbove = "20.5";
 		textBelow = "Õý³£";
+	}
+	
+	private float getTextLength(String text, Paint paint) {
+		return paint.measureText(text, 0, text.length());
 	}
 	
 	private Paint setPaint(int alpha, int color, Style style) {
@@ -78,7 +80,8 @@ public class StaticCircleView extends View{
 		canvas.drawCircle(centerX, centerY, radius, exCirclePaint);
 		canvas.drawCircle(centerX, centerY, radius - exCircleWidth, inCirclePaint);
 		
-		canvas.drawText(textAbove, centerX, centerY, )
+		textPaint.setTextSize(300);
+		canvas.drawText(textAbove, centerX - getTextLength(textAbove, textPaint) / 2, centerY, textPaint);
 		
 	}
 	
