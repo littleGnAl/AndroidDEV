@@ -12,23 +12,33 @@ import android.view.View;
 public class StaticCircleView extends View{
 	private Paint exCirclePaint = null;
 	private Paint inCirclePaint = null;
+	private Paint textPaint = null;
 	
 	private float circleWidthScale = 0.04f;
 	private float exCircleWidth;
 	
+	private String textAbove;
+	private String textBelow;
+	
 	private void initVariable() {
-		exCirclePaint = setPaint(150, Color.WHITE);
-		inCirclePaint = setPaint(255, Color.WHITE);
+		exCirclePaint = setPaint(150, Color.WHITE, Style.STROKE);
+		inCirclePaint = setPaint(255, Color.WHITE, Style.STROKE);
+		
+		
+		
 		
 		exCircleWidth = 0;
+		
+		textAbove = "20.5";
+		textBelow = "Õý³£";
 	}
 	
-	private Paint setPaint(int alpha, int color) {
+	private Paint setPaint(int alpha, int color, Style style) {
 		Paint paint = new Paint();
 		paint.setAntiAlias(true);
 		paint.setColor(color);
 		paint.setAlpha(alpha);
-		paint.setStyle(Style.STROKE);
+		paint.setStyle(style);
 		
 		return paint;
 	}
@@ -68,6 +78,20 @@ public class StaticCircleView extends View{
 		canvas.drawCircle(centerX, centerY, radius, exCirclePaint);
 		canvas.drawCircle(centerX, centerY, radius - exCircleWidth, inCirclePaint);
 		
+		canvas.drawText(textAbove, centerX, centerY, )
+		
+	}
+	
+	/*
+	 * Set the above text */
+	public void setTextAbove(String textAbove) {
+		this.textAbove = textAbove;
+	}
+	
+	/*
+	 * Set the below text */
+	public void setTextBelow(String textBelow) {
+		this.textBelow = textBelow;
 	}
 
 }
