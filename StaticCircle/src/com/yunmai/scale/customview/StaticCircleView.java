@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.FontMetrics;
 import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -14,8 +15,9 @@ public class StaticCircleView extends View{
 	private Paint inCirclePaint = null;
 	private Paint textPaint = null;
 	
-	private float circleWidthScale = 0.04f;
+	private final float circleWidthScale = 0.04f;
 	private float exCircleWidth;
+	private final float textSizeScale = 0.8f;
 	
 	private String textAbove;
 	private String textBelow;
@@ -33,6 +35,11 @@ public class StaticCircleView extends View{
 	
 	private float getTextLength(String text, Paint paint) {
 		return paint.measureText(text, 0, text.length());
+	}
+	
+	private float getTextHeight(Paint paint) {
+		FontMetrics fm = paint.getFontMetrics();
+		return (int) Math.ceil(fm.descent - fm.ascent);
 	}
 	
 	private Paint setPaint(int alpha, int color, Style style) {
@@ -80,8 +87,12 @@ public class StaticCircleView extends View{
 		canvas.drawCircle(centerX, centerY, radius, exCirclePaint);
 		canvas.drawCircle(centerX, centerY, radius - exCircleWidth, inCirclePaint);
 		
-		textPaint.setTextSize(300);
-		canvas.drawText(textAbove, centerX - getTextLength(textAbove, textPaint) / 2, centerY, textPaint);
+		float widthDelta = (radius - exCircleWidth) * textSizeScale;
+		
+		Log.i("AAA", "widthDelta: " + widthDelta);
+		
+		textPaint.setTextSize(widthDelta);
+		canvas.drawText(textAbove, centerX - getTextLength(textAbove, textPaint) / 2, centerY + getTextHeight(textPaint) / 4, textPaint);
 		
 	}
 	
