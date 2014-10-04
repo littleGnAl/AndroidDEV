@@ -1,19 +1,28 @@
 package com.yunmai.scale.customview;
 
+import java.io.File;
+
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Paint.Style;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
 public class StaticCircleView extends View{
+
+	//private static final String FONTS_FOLDER = "fonts";
+	//private static final String FONT_HELVETICANEUE = FONTS_FOLDER + File.separator + "HelveticaNeueLTPro-ThEx.ttf";
+	
 	private Paint exCirclePaint = null;
 	private Paint inCirclePaint = null;
-	private Paint textPaint = null;
+	private Paint textAbovePaint = null;
+	private Paint textBelowPaint = null;
 	
 	private final float circleWidthScale = 0.04f;
 	private float exCircleWidth;
@@ -21,16 +30,29 @@ public class StaticCircleView extends View{
 	
 	private String textAbove;
 	private String textBelow;
+	private String textAboveMantissa;
 	
-	private void initVariable() {
+	private float textSizeAbove;
+	private float textSizeBelow;
+	
+	private void initVariable(Context context) {
+		//font style 
+		//AssetManager assets = context.getAssets();
+		//final Typeface font = Typeface.createFromAsset(assets, FONT_HELVETICANEUE);
+		
 		exCirclePaint = setPaint(150, Color.WHITE, Style.STROKE);
 		inCirclePaint = setPaint(255, Color.WHITE, Style.STROKE);
-		textPaint = setPaint(255, Color.WHITE, Style.FILL);
+		textAbovePaint = setPaint(255, Color.WHITE, Style.FILL);
+		//textAbovePaint.setTypeface(font);
+		textBelowPaint = setPaint(255, Color.WHITE, Style.FILL);
 		
 		exCircleWidth = 0;
 		
 		textAbove = "20.5";
+		textAboveMantissa = "";
 		textBelow = "Õý³£";
+		
+		setLayerType(View.LAYER_TYPE_HARDWARE, null);
 	}
 	
 	private float getTextLength(String text, Paint paint) {
@@ -52,6 +74,16 @@ public class StaticCircleView extends View{
 		return paint;
 	}
 	
+	private void setTextAboveMantissa() {
+		String[] s = textAbove.split("\\.");
+		if (s.length > 1) {
+			textAbove = s[0];
+			textAboveMantissa = "." + s[1];
+		} else {
+			textAboveMantissa = "";
+		}
+	}
+	
 	private void setCircleStrokeWidth(int width) {
 		exCircleWidth = width * circleWidthScale;
 		
@@ -63,7 +95,7 @@ public class StaticCircleView extends View{
 	public StaticCircleView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
-		initVariable();
+		initVariable(context);
 		
 	}
 	
@@ -78,6 +110,7 @@ public class StaticCircleView extends View{
 		Log.i("AAA", "width / height: " + width + " " + height);
 		
 		setCircleStrokeWidth(width);
+		setTextAboveMantissa();
 		
 		float centerX = width / 2;
 		float centerY = height / 2;
@@ -87,13 +120,29 @@ public class StaticCircleView extends View{
 		canvas.drawCircle(centerX, centerY, radius, exCirclePaint);
 		canvas.drawCircle(centerX, centerY, radius - exCircleWidth, inCirclePaint);
 		
-		float widthDelta = (radius - exCircleWidth) * textSizeScale;
+		float widthDelta = radius - exCircleWidth;
+		textSizeAbove = (radius - exCircleWidth) * textSizeScale;
+		textSizeBelow = textSizeAbove / 2;// * textSizeScale;
 		
 		Log.i("AAA", "widthDelta: " + widthDelta);
 		
-		textPaint.setTextSize(widthDelta);
-		canvas.drawText(textAbove, centerX - getTextLength(textAbove, textPaint) / 2, centerY + getTextHeight(textPaint) / 4, textPaint);
+		textAbovePaint.setTextSize(textSizeAbove);
+		textBelowPaint.setTextSize(textSizeBelow);
 		
+		float textAboveXDes = centerX - getTextLength(textAbove, textAbovePaint) / 2 - getTextLength(textAboveMantissa, textBelowPaint) / 2;
+		float textAboveYDes = centerY;
+		
+		// Text above
+		canvas.drawText(textAbove, textAboveXDes, textAboveYDes, textAbovePaint);
+		
+		// Text mantissa
+		canvas.drawText(textAboveMantissa, centerX + getTextLength(textAbove, textAbovePaint) / 2 - getTextLength(textAboveMantissa, textBelowPaint) / 2, textAboveYDes, textBelowPaint);
+		
+		//textBelowPaint.setTextSize(textSizeBelow);
+		float textBelowYDes = centerY + widthDelta / 2 + getTextHeight(textBelowPaint) / 4;
+		
+		// Text below
+		canvas.drawText(textBelow, centerX - getTextLength(textBelow, textBelowPaint) / 2,  textBelowYDes, textBelowPaint);
 	}
 	
 	/*
