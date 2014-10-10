@@ -1,10 +1,10 @@
-package com.cauchy.demo.flipcustomviewsimple;
+package com.yunmai.scale;
 
 import android.graphics.Camera;
 import android.graphics.Matrix;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.Transformation;
 
 public class FlipAnimation extends Animation
@@ -30,10 +30,10 @@ public class FlipAnimation extends Animation
         this.fromView = fromView;
         this.toView = toView;
 
-        setDuration(500);
+        setDuration(800);
         setFillAfter(true);
 
-        setInterpolator(new AccelerateDecelerateInterpolator());
+        setInterpolator(new LinearInterpolator());
     }
 
     public void reverse()
