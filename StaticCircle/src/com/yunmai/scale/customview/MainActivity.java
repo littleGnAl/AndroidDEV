@@ -1,16 +1,22 @@
 package com.yunmai.scale.customview;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends Activity {
 
+	private StaticCircleView sv = null; 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		sv = (StaticCircleView) super.findViewById(R.id.staticCircleView);
+		
 	}
 
 	@Override
